@@ -54,21 +54,21 @@ class UserController extends Controller
 
         try {
 
-            // $user = User::findOrFail($id);
+            $user = User::findOrFail($id);
 
             $dataUser = $request->all();
 
-            print_r($id);
-            print_r($dataUser);
+            foreach ($dataUser as $key => $value) {
+                $user->$key = $value;
+            }
 
-            // $dataUser['pass'] = md5($dataUser['pass']);
+            $user->save();
 
-            // $returnInsert = User::create($dataUser);
-            // $returnInsert = ($returnInsert->returnArray())['attributes'];
-            // unset($returnInsert['pass']);
+            $user = ($user->returnArray())['attributes'];
+            unset($user['pass']);
 
-            // $jsonResponse->returnStatus = 'success';
-            // $jsonResponse->data = $returnInsert;
+            $jsonResponse->returnStatus = 'success';
+            $jsonResponse->data = $user;
 
         } catch (Exception $e) {
             $jsonResponse->returnStatus = 'error';
