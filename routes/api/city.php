@@ -10,6 +10,10 @@ Route::get('/city/id/{id}', function ($id) {
     return CityController::show($id);
 });
 
+Route::get('/city/state/{stateId}', function ($stateId) {
+    return CityController::showByState($stateId);
+});
+
 /**
  * busca endereço pela cidade
  */

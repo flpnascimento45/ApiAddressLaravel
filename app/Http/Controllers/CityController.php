@@ -50,4 +50,31 @@ class CityController extends Controller
             return get_object_vars($jsonResponse);
         }
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $stateId
+     * @return \Illuminate\Http\Response
+     */
+    public static function showByState($stateId)
+    {
+        $jsonResponse = new JsonResponse();
+
+        try {
+
+            $jsonResponse->returnStatus = 'success';
+
+            $query = City::query();
+            $query->where('state_id', '=', $stateId);
+
+            $jsonResponse->data = $query->get();
+
+        } catch (Exception $e) {
+            $jsonResponse->returnStatus = 'error';
+            $jsonResponse->errorMessage = $e->getMessage();
+        } finally {
+            return get_object_vars($jsonResponse);
+        }
+    }
 }
