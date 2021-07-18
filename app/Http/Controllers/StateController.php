@@ -10,7 +10,7 @@ class StateController extends Controller
 {
 
     /**
-     * Display a listing of the resource.
+     * Retorna todos estados
      *
      * @return \Illuminate\Http\Response
      */
@@ -32,7 +32,7 @@ class StateController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Retorna estado filtrado pelo id
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -53,7 +53,7 @@ class StateController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Retorna total de usuarios de todos estados
      *
      * @return \Illuminate\Http\Response
      */
@@ -83,7 +83,8 @@ class StateController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Retorna total de usuarios filtrando estado
+     *
      * @param integer $stateId
      * @return \Illuminate\Http\Response
      */

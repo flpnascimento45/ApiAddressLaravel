@@ -9,7 +9,7 @@ use \Exception;
 class CityController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Retorna todas as cidades
      *
      * @return \Illuminate\Http\Response
      */
@@ -31,7 +31,7 @@ class CityController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Retorna cidade filtrada pelo id
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -52,7 +52,7 @@ class CityController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Retorna todas as cidades de um determinado estado
      *
      * @param  int  $stateId
      * @return \Illuminate\Http\Response
@@ -77,4 +77,72 @@ class CityController extends Controller
             return get_object_vars($jsonResponse);
         }
     }
+
+    /**
+     * Retorna os usuarios de todas as cidades
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public static function showUsersByCity()
+    {
+        $jsonResponse = new JsonResponse();
+
+        try {
+            $jsonResponse->returnStatus = 'success';
+
+            $query = City::query();
+            $query->select(City::raw('city.id, city.name, city.state_id, count(user.id) as countUsers'))
+                ->join('address', 'address.city_id', 'city.id')
+                ->join('user', 'user.address_id', 'address.id')
+                ->groupBy('city.id', 'city.name', 'city.state_id')
+                ->count();
+
+            $jsonResponse->data = $query->get();
+
+        } catch (Exception $e) {
+            $jsonResponse->returnStatus = 'error';
+            $jsonResponse->errorMessage = $e->getMessage();
+        } finally {
+            return get_object_vars($jsonResponse);
+        }
+    }
+
+    /**
+     * Retorna os usuarios de uma determinada cidade
+     *
+     * @param integer $cityId
+     * @return \Illuminate\Http\Response
+     */
+    public static function showUsersByCityId($cityId)
+    {
+        $jsonResponse = new JsonResponse();
+
+        try {
+            $jsonResponse->returnStatus = 'success';
+
+            $query = City::query();
+            $query->select(City::raw('city.id, city.name, city.state_id, count(user.id) as countUsers'))
+                ->leftJoin('address', 'address.city_id', 'city.id')
+                ->leftJoin('user', 'user.address_id', 'address.id')
+                ->where('city.id', '=', $cityId)
+                ->groupBy('city.id', 'city.name', 'city.state_id')
+                ->count();
+
+            $jsonResponse->data = $query->get();
+
+            // deixar objeto da posição 0 disponivel para acesso direto
+            if (count($jsonResponse->data) > 0) {
+                $jsonResponse->data = $jsonResponse->data[0];
+            } else {
+                throw new Exception('Cidade não localizada!');
+            }
+
+        } catch (Exception $e) {
+            $jsonResponse->returnStatus = 'error';
+            $jsonResponse->errorMessage = $e->getMessage();
+        } finally {
+            return get_object_vars($jsonResponse);
+        }
+    }
+
 }
