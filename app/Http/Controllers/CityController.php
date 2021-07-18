@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\JsonResponse;
-use App\Models\State;
+use App\Models\City;
 use \Exception;
 
-class StateController extends Controller
+class CityController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +20,7 @@ class StateController extends Controller
 
         try {
             $jsonResponse->returnStatus = 'success';
-            $jsonResponse->data = State::all();
+            $jsonResponse->data = City::all();
         } catch (Exception $e) {
             $jsonResponse->returnStatus = 'error';
             $jsonResponse->errorMessage = $e->getMessage();
@@ -43,7 +42,7 @@ class StateController extends Controller
 
         try {
             $jsonResponse->returnStatus = 'success';
-            $jsonResponse->data = State::findOrFail($id);
+            $jsonResponse->data = City::findOrFail($id);
         } catch (Exception $e) {
             $jsonResponse->returnStatus = 'error';
             $jsonResponse->errorMessage = $e->getMessage();
@@ -51,5 +50,4 @@ class StateController extends Controller
             return get_object_vars($jsonResponse);
         }
     }
-
 }
