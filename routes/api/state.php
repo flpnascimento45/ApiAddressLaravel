@@ -10,6 +10,10 @@ Route::get('/state/id/{id}', function ($id) {
     return StateController::show($id);
 });
 
+Route::get('/state/users', function () {
+    return StateController::showUsersByState();
+});
+
 /**
  * retorna totalização de usuarios por estado
  */

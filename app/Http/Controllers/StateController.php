@@ -52,4 +52,36 @@ class StateController extends Controller
         }
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public static function showUsersByState()
+    {
+        $jsonResponse = new JsonResponse();
+
+        try {
+            $jsonResponse->returnStatus = 'success';
+
+            $query = State::query();
+            $query->select(State::raw('state.id, state.name, state.initials, count(user.id) as countUsers'))
+                ->join('city', 'city.state_id', 'state.id')
+                ->join('address', 'address.city_id', 'city.id')
+                ->join('user', 'user.address_id', 'address.id')
+                ->groupBy('state.id', 'state.name', 'state.initials')
+                ->count();
+
+            // ->where('state_id', '=', $stateId);
+
+            $jsonResponse->data = $query->get();
+
+        } catch (Exception $e) {
+            $jsonResponse->returnStatus = 'error';
+            $jsonResponse->errorMessage = $e->getMessage();
+        } finally {
+            return get_object_vars($jsonResponse);
+        }
+    }
+
 }
