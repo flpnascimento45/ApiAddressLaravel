@@ -86,6 +86,21 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $jsonResponse = new JsonResponse();
+
+        try {
+
+            $user = User::findOrFail($id);
+            $user->delete();
+
+            $jsonResponse->returnStatus = 'success';
+            $jsonResponse->data = 'Excluido com êxito';
+
+        } catch (Exception $e) {
+            $jsonResponse->returnStatus = 'error';
+            $jsonResponse->errorMessage = $e->getMessage();
+        } finally {
+            return get_object_vars($jsonResponse);
+        }
     }
 }
