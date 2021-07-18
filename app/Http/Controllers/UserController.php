@@ -9,9 +9,37 @@ use \Exception;
 
 class UserController extends Controller
 {
+    /**
+     *
+     */
+    public function index()
+    {
+        return get_object_vars(new JsonResponse('error', '', 'Método não definido'));
+    }
 
     /**
-     * Store a newly created resource in storage.
+     * Retorna usuario filtrado pelo id
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $jsonResponse = new JsonResponse();
+
+        try {
+            $jsonResponse->returnStatus = 'success';
+            $jsonResponse->data = User::findOrFail($id);
+        } catch (Exception $e) {
+            $jsonResponse->returnStatus = 'error';
+            $jsonResponse->errorMessage = $e->getMessage();
+        } finally {
+            return get_object_vars($jsonResponse);
+        }
+    }
+
+    /**
+     * Criar novo usuario
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -42,7 +70,7 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualizar cadastro do usuario
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -79,7 +107,7 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Excluir usuario
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
