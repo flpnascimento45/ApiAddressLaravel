@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\JsonResponse;
 use App\Models\City;
+use App\Models\State;
 use \Exception;
 
 class CityController extends Controller

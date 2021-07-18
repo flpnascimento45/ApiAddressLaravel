@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class City extends Model
+class Address extends Model
 {
     protected $fillable = [
-        'id', 'name', 'state_id',
+        'id', 'city_id', 'address', 'zip_code',
     ];
 
-    protected $table = 'city';
-
+    protected $table = 'address';
 }
