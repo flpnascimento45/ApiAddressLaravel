@@ -72,9 +72,45 @@ class StateController extends Controller
                 ->groupBy('state.id', 'state.name', 'state.initials')
                 ->count();
 
-            // ->where('state_id', '=', $stateId);
+            $jsonResponse->data = $query->get();
+
+        } catch (Exception $e) {
+            $jsonResponse->returnStatus = 'error';
+            $jsonResponse->errorMessage = $e->getMessage();
+        } finally {
+            return get_object_vars($jsonResponse);
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     * @param integer $stateId
+     * @return \Illuminate\Http\Response
+     */
+    public static function showUsersByStateId($stateId)
+    {
+        $jsonResponse = new JsonResponse();
+
+        try {
+            $jsonResponse->returnStatus = 'success';
+
+            $query = State::query();
+            $query->select(State::raw('state.id, state.name, state.initials, count(user.id) as countUsers'))
+                ->join('city', 'city.state_id', 'state.id')
+                ->leftJoin('address', 'address.city_id', 'city.id')
+                ->leftJoin('user', 'user.address_id', 'address.id')
+                ->where('state.id', '=', $stateId)
+                ->groupBy('state.id', 'state.name', 'state.initials')
+                ->count();
 
             $jsonResponse->data = $query->get();
+
+            // deixar objeto da posição 0 disponivel para acesso direto
+            if (count($jsonResponse->data) > 0) {
+                $jsonResponse->data = $jsonResponse->data[0];
+            } else {
+                throw new Exception('Estado não localizado!');
+            }
 
         } catch (Exception $e) {
             $jsonResponse->returnStatus = 'error';
